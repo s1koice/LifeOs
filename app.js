@@ -17,3 +17,13 @@ function renderMoney(){
  document.getElementById('incomeTotal').textContent=shekel(incSum);
  document.getElementById('balanceTotal').textContent=shekel(incSum-monthSum);
 }
+function initTabs(){
+ document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active-tab'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active-tab');
+  document.getElementById(btn.dataset.tab).classList.add('active');
+ });
+}
+initTabs();
+renderMoney();
