@@ -23,7 +23,15 @@
 <button class="tab" data-tab="tasks">Задачи</button>
 <button class="tab" data-tab="plan">День</button>
 </div>
-<section id="finance" class="panel active"><div class="card"><h2>Финансы</h2><p>Быстрая запись расходов и доходов.</p></div></section>
+<section id="finance" class="panel active">
+<div class="card"><h2>Финансы</h2><p>Быстрая запись расходов и доходов.</p></div>
+<form id="moneyForm" class="card">
+<input id="amount" inputmode="decimal" placeholder="Сумма ₪" required>
+<input id="note" placeholder="Комментарий">
+<button type="submit">Записать расход</button>
+</form>
+<div id="transactions"></div>
+</section>
 <section id="tasks" class="panel"><div class="card"><h2>Задачи</h2><p>Список задач на день.</p></div></section>
 <section id="plan" class="panel"><div class="card"><h2>План дня</h2><p>Фокус, три главные задачи и вечерняя рефлексия.</p></div></section>
 </main>
