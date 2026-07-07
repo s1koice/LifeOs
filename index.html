@@ -3,29 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#09090b">
 <link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.webmanifest">
 <title>LifeOS</title>
 </head>
 <body>
 <main class="app">
 <h1>LifeOS</h1>
-<p class="muted">Личный центр управления: финансы, задачи, план дня.</p>
+<p class="muted">Личный центр управления.</p>
 <div class="grid">
-<div class="card"><p>Сегодня</p><h2>₪0</h2></div>
-<div class="card"><p>Месяц</p><h2>₪0</h2></div>
+<div class="card"><p>Сегодня</p><h2 id="todayTotal">₪0</h2></div>
+<div class="card"><p>Месяц</p><h2 id="monthTotal">₪0</h2></div>
+<div class="card"><p>Доходы</p><h2 id="incomeTotal">₪0</h2></div>
+<div class="card"><p>Баланс</p><h2 id="balanceTotal">₪0</h2></div>
 </div>
-<div class="card">
-<h2>Финансы</h2>
-<p>Быстрая запись расходов и доходов.</p>
+<div class="tabs">
+<button class="tab active-tab" data-tab="finance">Финансы</button>
+<button class="tab" data-tab="tasks">Задачи</button>
+<button class="tab" data-tab="plan">День</button>
 </div>
-<div class="card">
-<h2>Задачи</h2>
-<p>Список задач на день.</p>
-</div>
-<div class="card">
-<h2>План дня</h2>
-<p>Фокус, три главные задачи и вечерняя рефлексия.</p>
-</div>
+<section id="finance" class="panel active"><div class="card"><h2>Финансы</h2><p>Быстрая запись расходов и доходов.</p></div></section>
+<section id="tasks" class="panel"><div class="card"><h2>Задачи</h2><p>Список задач на день.</p></div></section>
+<section id="plan" class="panel"><div class="card"><h2>План дня</h2><p>Фокус, три главные задачи и вечерняя рефлексия.</p></div></section>
 </main>
+<script src="app.js"></script>
 </body>
 </html>
