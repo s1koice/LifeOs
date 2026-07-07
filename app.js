@@ -19,6 +19,12 @@ function renderMoney(){
  const box=document.getElementById('transactions');
  if(box){box.innerHTML=list.slice(-8).reverse().map(x=>`<div class="card item"><span>${x.note||'Расход'}</span><b>${shekel(x.amount)}</b></div>`).join('');}
 }
+function renderTasks(){
+ const box=document.getElementById('taskList');
+ if(!box)return;
+ box.innerHTML=state.tasks.map((t,i)=>`<div class="card item"><span>${t.done?'✅':'⬜'} ${t.text}</span><button onclick="toggleTask(${i})">OK</button></div>`).join('');
+}
+function toggleTask(i){state.tasks[i].done=!state.tasks[i].done;save();renderTasks();}
 function initTabs(){
  document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active-tab'));
@@ -39,6 +45,13 @@ function initMoneyForm(){
   save();renderMoney();
  };
 }
+function initTaskForm(){
+ const form=document.getElementById('taskForm');
+ if(!form)return;
+ form.onsubmit=e=>{e.preventDefault();const text=document.getElementById('taskText').value.trim();if(!text)return;state.tasks.push({text,done:false});document.getElementById('taskText').value='';save();renderTasks();};
+}
 initTabs();
 initMoneyForm();
+initTaskForm();
 renderMoney();
+renderTasks();
