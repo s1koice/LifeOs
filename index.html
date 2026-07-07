@@ -10,26 +10,40 @@
 </head>
 <body>
 <main class="app">
-<h1>LifeOS</h1>
-<p class="muted">Личный центр управления.</p>
-<div class="grid">
-<div class="card"><p>Сегодня</p><h2 id="todayTotal">₪0</h2></div>
-<div class="card"><p>Месяц</p><h2 id="monthTotal">₪0</h2></div>
-<div class="card"><p>Доходы</p><h2 id="incomeTotal">₪0</h2></div>
-<div class="card"><p>Баланс</p><h2 id="balanceTotal">₪0</h2></div>
-</div>
+<header class="topbar">
+<div class="brand"><div class="logo">L</div><div><h1>LifeOS</h1><p class="muted">Личный центр управления</p></div></div>
+<div class="pill">v0.2</div>
+</header>
+<section class="hero">
+<p class="muted">Сегодня</p>
+<h2>Фокус, деньги и задачи под контролем</h2>
+<p class="muted">Быстрая система для ежедневного учета, планирования и самодисциплины.</p>
+</section>
+<section class="grid">
+<div class="stat"><p>Сегодня</p><h2 id="todayTotal">₪0</h2><span class="muted">расходы дня</span></div>
+<div class="stat"><p>Месяц</p><h2 id="monthTotal">₪0</h2><span class="muted">все расходы</span></div>
+<div class="stat"><p>Доходы</p><h2 id="incomeTotal">₪0</h2><span class="muted">за месяц</span></div>
+<div class="stat"><p>Баланс</p><h2 id="balanceTotal">₪0</h2><span class="muted">доходы минус расходы</span></div>
+</section>
 <div class="tabs"><button class="tab active-tab" data-tab="finance">Финансы</button><button class="tab" data-tab="tasks">Задачи</button><button class="tab" data-tab="plan">День</button></div>
 <section id="finance" class="panel active">
-<div class="card"><h2>Финансы</h2><p>Быстрая запись расходов и доходов.</p></div>
-<form id="moneyForm" class="card"><input id="amount" inputmode="decimal" placeholder="Сумма ₪" required><input id="note" placeholder="Комментарий"><button type="submit">Записать расход</button></form>
-<div id="transactions"></div>
+<div class="module-grid"><div class="module">💰<b>Быстрый учет</b><p class="muted">Запиши трату за 5 секунд</p></div><div class="module">📊<b>Контроль</b><p class="muted">Смотри давление расходов</p></div></div>
+<div class="section-title">Новая операция</div>
+<form id="moneyForm" class="card"><input id="amount" inputmode="decimal" placeholder="Сумма ₪" required><input id="note" placeholder="Комментарий: кофе, бензин, продукты"><button type="submit">Записать расход</button></form>
+<div class="section-title">Последние операции</div><div id="transactions"></div>
 </section>
 <section id="tasks" class="panel">
-<div class="card"><h2>Задачи</h2><p>Список задач на день.</p></div>
-<form id="taskForm" class="card"><input id="taskText" placeholder="Новая задача" required><button type="submit">Добавить</button></form>
-<div id="taskList"></div>
+<div class="module-grid"><div class="module">✅<b>Задачи</b><p class="muted">Не держи всё в голове</p></div><div class="module">🎯<b>Фокус</b><p class="muted">Один день — один курс</p></div></div>
+<div class="section-title">Новая задача</div>
+<form id="taskForm" class="card"><input id="taskText" placeholder="Например: тренировка 40 минут" required><button type="submit">Добавить задачу</button></form>
+<div class="section-title">Список</div><div id="taskList"></div>
 </section>
-<section id="plan" class="panel"><div class="card"><h2>План дня</h2><p>Фокус, три главные задачи и вечерняя рефлексия.</p></div></section>
+<section id="plan" class="panel">
+<div class="module-grid"><div class="module">🌅<b>Утро</b><p class="muted">Фокус и 3 главные задачи</p></div><div class="module">🌙<b>Вечер</b><p class="muted">Итог без самообмана</p></div></div>
+<div class="card"><h2>План дня</h2><p class="muted">Следующий этап: форма фокуса, главных задач и вечерней рефлексии.</p></div>
+<div class="quick"><button>+ Фокус дня</button><button>+ Итог дня</button></div>
+</section>
+<div class="footer-space"></div>
 </main>
 <script src="app.js"></script>
 </body>
