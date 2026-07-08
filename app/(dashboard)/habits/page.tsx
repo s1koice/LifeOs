@@ -1,7 +1,9 @@
+import { Flame } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { daysAgoKey, toDateKey } from "@/lib/date";
 import { computePercent, computeStreak } from "@/lib/habit-stats";
+import { PageHeader } from "@/components/PageHeader";
 import { HabitForm } from "./HabitForm";
 import { HabitCard } from "./HabitCard";
 
@@ -35,10 +37,7 @@ export default async function HabitsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Привычки</h1>
-        <p className="text-sm text-muted">{habits.length} трекеров</p>
-      </div>
+      <PageHeader icon={Flame} color="green" title="Привычки" subtitle={`${habits.length} трекеров`} />
 
       <details className="panel group p-5">
         <summary className="cursor-pointer list-none font-semibold text-ink">

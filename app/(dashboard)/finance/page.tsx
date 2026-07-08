@@ -1,5 +1,7 @@
+import { Wallet } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { TransactionForm } from "./TransactionForm";
 import { TransactionRow } from "./TransactionRow";
 import { FinanceChart } from "./FinanceChart";
@@ -57,10 +59,12 @@ export default async function FinancePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Финансы</h1>
-        <p className="text-sm text-muted">Доходы, расходы и инвестиции</p>
-      </div>
+      <PageHeader
+        icon={Wallet}
+        color="amber"
+        title="Финансы"
+        subtitle="Доходы, расходы и инвестиции"
+      />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <div className="stat-tile">

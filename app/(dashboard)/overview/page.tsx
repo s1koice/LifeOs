@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { CheckSquare, Flame, Target, Wallet, Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { daysAgoKey, toDateKey } from "@/lib/date";
 import { computeStreak } from "@/lib/habit-stats";
+import { greeting } from "@/lib/greeting";
+import { IconChip } from "@/components/IconChip";
 import { TaskRow } from "@/app/(dashboard)/tasks/TaskRow";
 
 const STREAK_LOOKBACK_DAYS = 400;
@@ -67,37 +70,58 @@ export default async function OverviewPage() {
     deadline: g.deadline,
   }));
 
+  const habitsDone = habitsWithStreak.filter((h) => h.doneToday).length;
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="panel bg-gradient-to-br from-[#1e293bcc] to-[#0f172acc] p-6">
-        <p className="text-sm text-muted">Сводка</p>
-        <h1 className="mt-1 text-2xl font-bold">Главное за сегодня</h1>
-        <p className="mt-1 text-sm text-muted">
-          {new Date().toLocaleDateString("ru-RU", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
-        </p>
+      <div className="panel relative overflow-hidden bg-gradient-to-br from-[#1e293bcc] to-[#0f172acc] p-6">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent-blue/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-accent-violet/10 blur-3xl" />
+        <div className="relative">
+          <p className="text-sm text-muted">
+            {greeting()}
+            {user.name ? `, ${user.name}` : ""}!
+          </p>
+          <h1 className="mt-1 text-2xl font-bold">Главное за сегодня</h1>
+          <p className="mt-1 text-sm text-muted">
+            {new Date().toLocaleDateString("ru-RU", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            })}
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <div className="stat-tile">
-          <p className="label">Задач сегодня</p>
+          <div className="flex items-center gap-2">
+            <IconChip icon={CheckSquare} color="blue" size="sm" />
+            <p className="label">Задач сегодня</p>
+          </div>
           <p className="text-2xl font-bold">{tasksToday.length}</p>
         </div>
         <div className="stat-tile">
-          <p className="label">Привычки закрыты</p>
+          <div className="flex items-center gap-2">
+            <IconChip icon={Flame} color="green" size="sm" />
+            <p className="label">Привычки закрыты</p>
+          </div>
           <p className="text-2xl font-bold">
-            {habitsWithStreak.filter((h) => h.doneToday).length}/{habitsWithStreak.length}
+            {habitsDone}/{habitsWithStreak.length}
           </p>
         </div>
         <div className="stat-tile">
-          <p className="label">Активных целей</p>
+          <div className="flex items-center gap-2">
+            <IconChip icon={Target} color="violet" size="sm" />
+            <p className="label">Активных целей</p>
+          </div>
           <p className="text-2xl font-bold">{goalsList.length}</p>
         </div>
         <div className="stat-tile">
-          <p className="label">Расходы в этом месяце</p>
+          <div className="flex items-center gap-2">
+            <IconChip icon={Wallet} color="amber" size="sm" />
+            <p className="label">Расходы в этом месяце</p>
+          </div>
           <p className="text-2xl font-bold">
             {(monthExpenseAgg._sum.amount ?? 0).toFixed(0)}
           </p>
@@ -107,7 +131,10 @@ export default async function OverviewPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Задачи на сегодня</h2>
+            <div className="flex items-center gap-2">
+              <IconChip icon={CheckSquare} color="blue" size="sm" />
+              <h2 className="font-semibold">Задачи на сегодня</h2>
+            </div>
             <Link href="/tasks" className="text-xs text-accent-blue">
               Все задачи →
             </Link>
@@ -124,7 +151,10 @@ export default async function OverviewPage() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Привычки</h2>
+            <div className="flex items-center gap-2">
+              <IconChip icon={Flame} color="green" size="sm" />
+              <h2 className="font-semibold">Привычки</h2>
+            </div>
             <Link href="/habits" className="text-xs text-accent-blue">
               Все привычки →
             </Link>
@@ -140,7 +170,7 @@ export default async function OverviewPage() {
                   <span className="text-sm font-medium">{h.title}</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted">
-                  <span>{h.streak} 🔥</span>
+                  <span className={h.streak > 0 ? "text-accent-amber" : ""}>{h.streak} 🔥</span>
                   <span className={h.doneToday ? "text-accent-green" : ""}>
                     {h.doneToday ? "✓ сегодня" : "не отмечено"}
                   </span>
@@ -152,7 +182,10 @@ export default async function OverviewPage() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Ближайшие цели</h2>
+            <div className="flex items-center gap-2">
+              <IconChip icon={Target} color="violet" size="sm" />
+              <h2 className="font-semibold">Ближайшие цели</h2>
+            </div>
             <Link href="/goals" className="text-xs text-accent-blue">
               Все цели →
             </Link>
@@ -183,7 +216,10 @@ export default async function OverviewPage() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Последний AI-разбор</h2>
+            <div className="flex items-center gap-2">
+              <IconChip icon={Sparkles} color="violet" size="sm" />
+              <h2 className="font-semibold">Последний AI-разбор</h2>
+            </div>
             <Link href="/assistant" className="text-xs text-accent-blue">
               Открыть ассистента →
             </Link>

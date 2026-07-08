@@ -1,5 +1,7 @@
+import { FolderKanban } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { ProjectForm } from "./ProjectForm";
 import { ProjectCard } from "./ProjectCard";
 
@@ -12,10 +14,12 @@ export default async function ProjectsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Проекты</h1>
-        <p className="text-sm text-muted">{projects.length} всего</p>
-      </div>
+      <PageHeader
+        icon={FolderKanban}
+        color="blue"
+        title="Проекты"
+        subtitle={`${projects.length} всего`}
+      />
 
       <details className="panel group p-5">
         <summary className="cursor-pointer list-none font-semibold text-ink">

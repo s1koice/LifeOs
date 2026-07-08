@@ -1,5 +1,7 @@
+import { Target } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { GoalForm } from "./GoalForm";
 import { GoalCard } from "./GoalCard";
 
@@ -17,12 +19,12 @@ export default async function GoalsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Цели</h1>
-        <p className="text-sm text-muted">
-          {active.length} активных · {goals.length} всего
-        </p>
-      </div>
+      <PageHeader
+        icon={Target}
+        color="violet"
+        title="Цели"
+        subtitle={`${active.length} активных · ${goals.length} всего`}
+      />
 
       <details className="panel group p-5">
         <summary className="cursor-pointer list-none font-semibold text-ink">

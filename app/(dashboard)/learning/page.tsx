@@ -1,5 +1,7 @@
+import { BookOpen } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { LearningForm } from "./LearningForm";
 import { LearningCard } from "./LearningCard";
 
@@ -15,10 +17,12 @@ export default async function LearningPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Обучение</h1>
-        <p className="text-sm text-muted">Книги и курсы · {items.length} всего</p>
-      </div>
+      <PageHeader
+        icon={BookOpen}
+        color="blue"
+        title="Обучение"
+        subtitle={`Книги и курсы · ${items.length} всего`}
+      />
 
       <details className="panel group p-5">
         <summary className="cursor-pointer list-none font-semibold text-ink">

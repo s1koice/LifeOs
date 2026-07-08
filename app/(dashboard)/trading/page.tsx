@@ -1,5 +1,7 @@
+import { TrendingUp } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { TradeForm } from "./TradeForm";
 import { TradeRow } from "./TradeRow";
 
@@ -17,10 +19,7 @@ export default async function TradingPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Трейдинг</h1>
-        <p className="text-sm text-muted">Журнал сделок</p>
-      </div>
+      <PageHeader icon={TrendingUp} color="green" title="Трейдинг" subtitle="Журнал сделок" />
 
       <div className="grid grid-cols-3 gap-3">
         <div className="stat-tile">

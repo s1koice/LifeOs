@@ -1,6 +1,8 @@
+import { Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
 import { getOrCreateConversation } from "@/lib/ai/conversation";
+import { PageHeader } from "@/components/PageHeader";
 import { AssistantChat } from "./AssistantChat";
 
 export default async function AssistantPage() {
@@ -22,10 +24,12 @@ export default async function AssistantPage() {
   return (
     <div className="flex h-[calc(100vh-6rem)] flex-col">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold">AI-ассистент</h1>
-        <p className="text-sm text-muted">
-          Может читать и редактировать ваши цели, задачи и привычки прямо в диалоге.
-        </p>
+        <PageHeader
+          icon={Sparkles}
+          color="violet"
+          title="AI-ассистент"
+          subtitle="Может читать и редактировать ваши цели, задачи и привычки прямо в диалоге."
+        />
       </div>
       <AssistantChat initialMessages={initialMessages} />
     </div>

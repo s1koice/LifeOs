@@ -1,6 +1,8 @@
+import { HeartPulse } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
 import { daysAgoKey } from "@/lib/date";
+import { PageHeader } from "@/components/PageHeader";
 import { HealthTabs } from "./HealthTabs";
 
 export default async function HealthPage() {
@@ -28,10 +30,12 @@ export default async function HealthPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Здоровье</h1>
-        <p className="text-sm text-muted">Тренировки, добавки, сон, вес</p>
-      </div>
+      <PageHeader
+        icon={HeartPulse}
+        color="red"
+        title="Здоровье"
+        subtitle="Тренировки, добавки, сон, вес"
+      />
 
       <HealthTabs
         workouts={workouts}

@@ -1,5 +1,7 @@
+import { CheckSquare } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { TaskForm } from "./TaskForm";
 import { TaskRow } from "./TaskRow";
 
@@ -24,12 +26,12 @@ export default async function TasksPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Задачи</h1>
-        <p className="text-sm text-muted">
-          {todo.length} в работе · {done.length} выполнено
-        </p>
-      </div>
+      <PageHeader
+        icon={CheckSquare}
+        color="blue"
+        title="Задачи"
+        subtitle={`${todo.length} в работе · ${done.length} выполнено`}
+      />
 
       <details className="panel group p-5">
         <summary className="cursor-pointer list-none font-semibold text-ink">

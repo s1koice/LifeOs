@@ -1,5 +1,7 @@
+import { StickyNote } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { NoteForm } from "./NoteForm";
 import { NoteCard } from "./NoteCard";
 import { SearchBar } from "./SearchBar";
@@ -38,10 +40,7 @@ export default async function NotesPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Заметки</h1>
-        <p className="text-sm text-muted">{notes.length} найдено</p>
-      </div>
+      <PageHeader icon={StickyNote} color="violet" title="Заметки" subtitle={`${notes.length} найдено`} />
 
       <SearchBar tags={[...tagSet].sort()} currentQuery={q} currentTag={tag} />
 

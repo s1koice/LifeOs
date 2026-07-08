@@ -1,5 +1,7 @@
+import { Settings } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { PageHeader } from "@/components/PageHeader";
 import { ProfileForm } from "./ProfileForm";
 import { PasswordForm } from "./PasswordForm";
 import { TelegramCard } from "./TelegramCard";
@@ -12,10 +14,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Настройки</h1>
-        <p className="text-sm text-muted">{user.email}</p>
-      </div>
+      <PageHeader icon={Settings} color="muted" title="Настройки" subtitle={user.email} />
 
       <div className="panel p-5">
         <h2 className="mb-4 font-semibold">Профиль и чекины</h2>

@@ -3,21 +3,41 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import {
+  LayoutDashboard,
+  Target,
+  CheckSquare,
+  Flame,
+  Wallet,
+  HeartPulse,
+  BookOpen,
+  TrendingUp,
+  StickyNote,
+  FolderKanban,
+  Sparkles,
+  Settings,
+  Menu,
+  X,
+  LogOut,
+  type LucideIcon,
+} from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth";
+import { greeting, initials } from "@/lib/greeting";
+import { IconChip, type AccentColor } from "@/components/IconChip";
 
-const NAV_ITEMS = [
-  { href: "/overview", label: "Обзор", icon: "◧" },
-  { href: "/goals", label: "Цели", icon: "◎" },
-  { href: "/tasks", label: "Задачи", icon: "✓" },
-  { href: "/habits", label: "Привычки", icon: "↻" },
-  { href: "/finance", label: "Финансы", icon: "₪" },
-  { href: "/health", label: "Здоровье", icon: "♥" },
-  { href: "/learning", label: "Обучение", icon: "▤" },
-  { href: "/trading", label: "Трейдинг", icon: "▲" },
-  { href: "/notes", label: "Заметки", icon: "✎" },
-  { href: "/projects", label: "Проекты", icon: "▣" },
-  { href: "/assistant", label: "AI-ассистент", icon: "✦" },
-  { href: "/settings", label: "Настройки", icon: "⚙" },
+const NAV_ITEMS: { href: string; label: string; icon: LucideIcon; color: AccentColor }[] = [
+  { href: "/overview", label: "Обзор", icon: LayoutDashboard, color: "blue" },
+  { href: "/goals", label: "Цели", icon: Target, color: "violet" },
+  { href: "/tasks", label: "Задачи", icon: CheckSquare, color: "blue" },
+  { href: "/habits", label: "Привычки", icon: Flame, color: "green" },
+  { href: "/finance", label: "Финансы", icon: Wallet, color: "amber" },
+  { href: "/health", label: "Здоровье", icon: HeartPulse, color: "red" },
+  { href: "/learning", label: "Обучение", icon: BookOpen, color: "blue" },
+  { href: "/trading", label: "Трейдинг", icon: TrendingUp, color: "green" },
+  { href: "/notes", label: "Заметки", icon: StickyNote, color: "violet" },
+  { href: "/projects", label: "Проекты", icon: FolderKanban, color: "blue" },
+  { href: "/assistant", label: "AI-ассистент", icon: Sparkles, color: "violet" },
+  { href: "/settings", label: "Настройки", icon: Settings, color: "muted" },
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
@@ -33,7 +53,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             onClick={onNavigate}
             className={`nav-link ${active ? "nav-link-active" : ""}`}
           >
-            <span className="w-5 text-center text-base">{item.icon}</span>
+            <IconChip icon={item.icon} color={item.color} size="sm" />
             {item.label}
           </Link>
         );
@@ -61,11 +81,21 @@ export function Sidebar({ userName }: { userName?: string | null }) {
         <div className="flex-1 overflow-y-auto">
           <NavLinks />
         </div>
-        <div className="panel-soft flex items-center justify-between p-3 text-sm">
-          <span className="truncate text-muted">{userName || "Владелец"}</span>
+        <div className="panel-soft flex items-center gap-3 p-3">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-gradient text-xs font-bold text-white">
+            {initials(userName)}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium">{userName || "Владелец"}</p>
+            <p className="truncate text-xs text-muted">{greeting()}</p>
+          </div>
           <form action={signOutAction}>
-            <button type="submit" className="text-xs text-muted hover:text-ink">
-              ⎋
+            <button
+              type="submit"
+              aria-label="Выйти"
+              className="grid h-8 w-8 place-items-center rounded-lg text-muted transition hover:bg-white/10 hover:text-ink"
+            >
+              <LogOut size={16} />
             </button>
           </form>
         </div>
@@ -84,7 +114,7 @@ export function Sidebar({ userName }: { userName?: string | null }) {
           className="btn-ghost !px-3 !py-2 text-sm"
           aria-label="Меню"
         >
-          ☰
+          <Menu size={18} />
         </button>
       </div>
 
@@ -99,7 +129,7 @@ export function Sidebar({ userName }: { userName?: string | null }) {
             <div className="mb-6 flex items-center justify-between">
               <span className="font-bold">Меню</span>
               <button onClick={() => setOpen(false)} className="btn-ghost !px-3 !py-1.5">
-                ✕
+                <X size={16} />
               </button>
             </div>
             <NavLinks onNavigate={() => setOpen(false)} />
