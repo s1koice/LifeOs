@@ -1,18 +1,19 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireUserId } from "@/lib/session";
-import { toDateKey } from "@/lib/date";
+import { requireUser } from "@/lib/session";
+import { daysAgoKey, toDateKey } from "@/lib/date";
 import { computeStreak } from "@/lib/habit-stats";
 import { TaskRow } from "@/app/(dashboard)/tasks/TaskRow";
 
+const STREAK_LOOKBACK_DAYS = 400;
+
 export default async function OverviewPage() {
-  const userId = await requireUserId();
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  const user = await requireUser();
+  const userId = user.id;
+  const todayStart = new Date(toDateKey(new Date(), user.timezone));
   const todayEnd = new Date(todayStart);
   todayEnd.setDate(todayEnd.getDate() + 1);
-  const since90 = new Date();
-  since90.setDate(since90.getDate() - 90);
+  const since = new Date(daysAgoKey(STREAK_LOOKBACK_DAYS, user.timezone));
 
   const [tasksToday, activeGoals, habits, lastReview, monthExpenseAgg]  = await Promise.all([
     prisma.task.findMany({
@@ -32,7 +33,7 @@ export default async function OverviewPage() {
     }),
     prisma.habit.findMany({
       where: { userId, archived: false },
-      include: { entries: { where: { date: { gte: since90 } } } },
+      include: { entries: { where: { date: { gte: since } } } },
     }),
     prisma.dailyReview.findFirst({
       where: { userId },
@@ -49,13 +50,13 @@ export default async function OverviewPage() {
   ]);
 
   const habitsWithStreak = habits.map((h) => {
-    const keys = new Set(h.entries.map((e) => toDateKey(new Date(e.date))));
+    const keys = new Set(h.entries.map((e) => toDateKey(new Date(e.date), user.timezone)));
     return {
       id: h.id,
       title: h.title,
       color: h.color,
-      doneToday: keys.has(toDateKey(new Date())),
-      streak: computeStreak(keys),
+      doneToday: keys.has(toDateKey(new Date(), user.timezone)),
+      streak: computeStreak(keys, user.timezone),
     };
   });
 

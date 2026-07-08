@@ -1,8 +1,8 @@
 import { daysAgoKey, toDateKey, todayKey } from "@/lib/date";
 
-export function computeStreak(completedDateKeys: Set<string>): number {
+export function computeStreak(completedDateKeys: Set<string>, timezone?: string): number {
   let streak = 0;
-  const today = todayKey();
+  const today = todayKey(timezone);
   let cursor = 0;
 
   // If today isn't checked off yet, start counting from yesterday
@@ -11,7 +11,7 @@ export function computeStreak(completedDateKeys: Set<string>): number {
     cursor = 1;
   }
 
-  while (completedDateKeys.has(daysAgoKey(cursor))) {
+  while (completedDateKeys.has(daysAgoKey(cursor, timezone))) {
     streak++;
     cursor++;
   }
@@ -21,11 +21,12 @@ export function computeStreak(completedDateKeys: Set<string>): number {
 
 export function computePercent(
   completedDateKeys: Set<string>,
-  windowDays: number
+  windowDays: number,
+  timezone?: string
 ): number {
   let count = 0;
   for (let i = 0; i < windowDays; i++) {
-    if (completedDateKeys.has(daysAgoKey(i))) count++;
+    if (completedDateKeys.has(daysAgoKey(i, timezone))) count++;
   }
   return Math.round((count / windowDays) * 100);
 }

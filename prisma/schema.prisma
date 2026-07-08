@@ -16,8 +16,9 @@ model User {
   timezone              String   @default("Asia/Jerusalem")
   morningCheckinTime    String   @default("08:00")
   eveningCheckinTime    String   @default("22:00")
-  telegramChatId        String?
+  telegramChatId        String?  @unique
   telegramLinkCode      String?  @unique
+  telegramLinkCodeExpiresAt DateTime?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 

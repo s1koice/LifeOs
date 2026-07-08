@@ -36,8 +36,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No user message" }, { status: 400 });
   }
 
-  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-  const conversation = await getOrCreateConversation(userId, "WEB");
+  const [user, conversation] = await Promise.all([
+    prisma.user.findUniqueOrThrow({ where: { id: userId } }),
+    getOrCreateConversation(userId, "WEB"),
+  ]);
   const history = await loadHistoryAsCoreMessages(conversation.id);
 
   await appendMessage(conversation.id, "USER", lastUserMessage.content);
@@ -46,7 +48,7 @@ export async function POST(req: Request) {
     model: anthropic(AI_MODEL),
     system: buildSystemPrompt({ userName: user.name, timezone: user.timezone }),
     messages: [...history, { role: "user", content: lastUserMessage.content }],
-    tools: getAssistantTools(userId),
+    tools: getAssistantTools(userId, user.timezone),
     maxSteps: 5,
     onFinish: async ({ text }) => {
       if (text) {

@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUserId } from "@/lib/session";
+import { requireUser, requireUserId } from "@/lib/session";
 import { toDateKey } from "@/lib/date";
 
 const habitSchema = z.object({
@@ -56,11 +56,11 @@ export async function deleteHabit(id: string) {
 }
 
 export async function toggleHabitToday(habitId: string) {
-  const userId = await requireUserId();
-  const habit = await prisma.habit.findFirst({ where: { id: habitId, userId } });
+  const user = await requireUser();
+  const habit = await prisma.habit.findFirst({ where: { id: habitId, userId: user.id } });
   if (!habit) return;
 
-  const dateKey = toDateKey(new Date());
+  const dateKey = toDateKey(new Date(), user.timezone);
   const date = new Date(dateKey);
 
   const existing = await prisma.habitEntry.findUnique({

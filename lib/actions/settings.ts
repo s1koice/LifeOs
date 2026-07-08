@@ -52,12 +52,15 @@ export async function updatePassword(formData: FormData) {
   revalidatePath("/settings");
 }
 
+const LINK_CODE_TTL_MINUTES = 15;
+
 export async function generateTelegramLinkCode() {
   const userId = await requireUserId();
   const code = crypto.randomInt(100000, 999999).toString();
+  const telegramLinkCodeExpiresAt = new Date(Date.now() + LINK_CODE_TTL_MINUTES * 60 * 1000);
   await prisma.user.update({
     where: { id: userId },
-    data: { telegramLinkCode: code },
+    data: { telegramLinkCode: code, telegramLinkCodeExpiresAt },
   });
   revalidatePath("/settings");
   return code;
@@ -67,7 +70,7 @@ export async function disconnectTelegram() {
   const userId = await requireUserId();
   await prisma.user.update({
     where: { id: userId },
-    data: { telegramChatId: null, telegramLinkCode: null },
+    data: { telegramChatId: null, telegramLinkCode: null, telegramLinkCodeExpiresAt: null },
   });
   revalidatePath("/settings");
 }

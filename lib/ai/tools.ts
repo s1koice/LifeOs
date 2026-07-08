@@ -2,8 +2,9 @@ import { tool } from "ai";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { GoalStatus, TaskPriority, TaskStatus } from "@prisma/client";
+import { toDateKey } from "@/lib/date";
 
-export function getAssistantTools(userId: string) {
+export function getAssistantTools(userId: string, timezone: string) {
   return {
     listGoals: tool({
       description: "Получить список целей пользователя со статусом и прогрессом",
@@ -161,7 +162,7 @@ export function getAssistantTools(userId: string) {
           where: { userId, archived: false },
           include: {
             entries: {
-              where: { date: { gte: new Date(new Date().toISOString().slice(0, 10)) } },
+              where: { date: { gte: new Date(toDateKey(new Date(), timezone)) } },
             },
           },
         });
@@ -180,7 +181,7 @@ export function getAssistantTools(userId: string) {
         const habit = await prisma.habit.findFirst({ where: { id: habitId, userId } });
         if (!habit) return { error: "habit not found" };
 
-        const dateKey = new Date().toISOString().slice(0, 10);
+        const dateKey = toDateKey(new Date(), timezone);
         const date = new Date(dateKey);
         const existing = await prisma.habitEntry.findUnique({
           where: { habitId_date: { habitId, date } },

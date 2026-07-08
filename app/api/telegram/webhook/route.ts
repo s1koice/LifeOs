@@ -12,6 +12,7 @@ import {
 } from "@/lib/ai/conversation";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 type TelegramUpdate = {
@@ -23,11 +24,19 @@ type TelegramUpdate = {
 
 export async function POST(req: Request) {
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
+
   if (secret) {
     const incoming = req.headers.get("x-telegram-bot-api-secret-token");
     if (incoming !== secret) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+  } else if (process.env.NODE_ENV === "production") {
+    // Never allow this public, unauthenticated route to run in production
+    // without a secret to verify the sender is really Telegram.
+    return NextResponse.json(
+      { error: "TELEGRAM_WEBHOOK_SECRET is not configured" },
+      { status: 401 }
+    );
   }
 
   const update = (await req.json()) as TelegramUpdate;
@@ -49,15 +58,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true });
     }
 
-    const user = await prisma.user.findFirst({ where: { telegramLinkCode: code } });
-    if (!user) {
+    const user = await prisma.user.findUnique({ where: { telegramLinkCode: code } });
+    const expired = user?.telegramLinkCodeExpiresAt && user.telegramLinkCodeExpiresAt < new Date();
+    if (!user || expired) {
       await sendTelegramMessage(chatId, "Код не найден или устарел. Сгенерируйте новый в Настройках.");
       return NextResponse.json({ ok: true });
     }
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { telegramChatId: chatId, telegramLinkCode: null },
+      data: { telegramChatId: chatId, telegramLinkCode: null, telegramLinkCodeExpiresAt: null },
     });
     await sendTelegramMessage(
       chatId,
@@ -66,7 +76,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const user = await prisma.user.findFirst({ where: { telegramChatId: chatId } });
+  const user = await prisma.user.findUnique({ where: { telegramChatId: chatId } });
   if (!user) {
     await sendTelegramMessage(
       chatId,
@@ -88,7 +98,7 @@ export async function POST(req: Request) {
     model: anthropic(AI_MODEL),
     system: buildSystemPrompt({ userName: user.name, timezone: user.timezone }),
     messages: [...history, { role: "user", content: text }],
-    tools: getAssistantTools(user.id),
+    tools: getAssistantTools(user.id, user.timezone),
     maxSteps: 5,
   });
 
